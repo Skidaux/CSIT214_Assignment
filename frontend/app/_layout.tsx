@@ -7,10 +7,11 @@ export default function RootLayout() {
         headerStyle: { backgroundColor: '#fff' },
         headerShadowVisible: false,
         headerTitleStyle: { fontWeight: '600' },
+        // headerBackVisible: false,
       }}
     >
-      <Stack.Screen name="index" options={{ title: 'Test' }} />
-      <Stack.Screen name="about" options={{ title: 'About' }} />
+      <Stack.Screen name="index" options={{ title: 'Test', headerLeft: () => null }} />
+      <Stack.Screen name="about" options={{ title: 'About', headerLeft: () => null }} />
     </Stack>
   );
 }
