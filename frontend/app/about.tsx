@@ -1,8 +1,8 @@
-import { Link } from 'expo-router';
-import { Button } from 'expo-router/build/react-navigation';
-import Head from 'expo-router/head';
-import React, {useState} from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Link } from "expo-router";
+import { Button } from "expo-router/build/react-navigation";
+import Head from "expo-router/head";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function About() {
   const [helloText, setHelloText] = useState<string | null>(null);
@@ -10,7 +10,7 @@ export default function About() {
   async function handlePress() {
     try {
       console.log("Button pressed");
-      const response = await fetch('http://localhost:3000/api/hello');
+      const response = await fetch("http://localhost:3000/api/hello");
       const json = await response.json();
       setHelloText(json.message);
     } catch (error) {
@@ -25,8 +25,8 @@ export default function About() {
       <View style={styles.section}>
         <Text style={styles.heading}>About</Text>
         <Text style={styles.paragraph}>
-          Replace this text in app/about.tsx with a description of what this app does and who
-          it's for.
+          Replace this text in app/about.tsx with a description of what this app
+          does and who it's for.
         </Text>
       </View>
 
@@ -34,8 +34,8 @@ export default function About() {
         <Text style={styles.subheading}>Contact</Text>
         <Text style={styles.paragraph}>your-email@example.com</Text>
       </View>
-        <Button onPress={handlePress}>Hello world</Button>
-        <Text>{helloText}</Text>
+      <Button onPress={handlePress}>Hello world</Button>
+      <Text>{helloText}</Text>
       <Link href="/" style={styles.link}>
         <Text style={styles.linkText}>← Back home</Text>
       </Link>
@@ -46,8 +46,8 @@ export default function About() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
     padding: 24,
     gap: 24,
   },
@@ -57,25 +57,26 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 22,
-    fontWeight: '700',
-    textAlign: 'center',
+    fontWeight: "700",
+    textAlign: "center",
   },
   subheading: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   paragraph: {
     fontSize: 15,
     lineHeight: 22,
-    color: '#333',
+    color: "#333",
   },
   link: {
     paddingVertical: 8,
     paddingHorizontal: 16,
   },
   linkText: {
-    color: '#2e78b7',
+    color: "#2e78b7",
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: "500",
   },
+  input: { borderWidth: 1, padding: 10, marginBottom: 10 },
 });

@@ -1,11 +1,14 @@
+// Entry point file of the backend
 import express from "express";
-import cors from 'cors';
+import cors from "cors";
+import { auth } from "./auth.js";
 
 const app = express();
 const PORT = 3000;
 
-
 app.use(cors());
+app.use(express.json());
+app.use("/auth", auth);
 app.get("/api", (req, res) => {
   res.send("test");
 });
