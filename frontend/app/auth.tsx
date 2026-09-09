@@ -124,12 +124,21 @@ export default function Auth() {
             style={styles.input}
             placeholder="secret code"
           ></TextInput>
-          <Text>{bus ? "Enabled" : "Disabled"}</Text>
+          <Text>Registring for a business {bus ? "Yes" : "No"}</Text>
           <Switch
             value={bus}
             onValueChange={setbus}
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={bus ? "#f5dd4b" : "#f4f3f4"}
+            trackColor={{ false: "#d1d5db", true: "#2e78b7" }}
+            thumbColor="#ffffff"
+            ios_backgroundColor="#d1d5db"
+          />
+          <Text>Are you Employee: {bus ? "Yes" : "No"}</Text>
+          <Switch
+            value={emp}
+            onValueChange={isEmp}
+            trackColor={{ false: "#d1d5db", true: "#2e78b7" }}
+            thumbColor="#ffffff"
+            ios_backgroundColor="#d1d5db"
           />
           <Button onPress={submitRegister}>Register</Button>
         </>
