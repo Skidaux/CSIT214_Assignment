@@ -3,9 +3,15 @@ import express from "express";
 import { saveUser, logUser } from "./db.js";
 const router = express.Router();
 
-interface User {
+interface Login {
   username: string;
   password: string;
+}
+
+interface Register {
+  username: string;
+  password: string;
+  uType: string;
   employee?: boolean;
 }
 
@@ -15,28 +21,37 @@ router.get("/test", (req, res) => {
 });
 
 router.post("/login", (req, res) => {
-  const user: User = {
+  const user: Login = {
     username: req.body.username,
     password: req.body.password,
   };
   console.log(user);
-  logUser(user.username, user.password);
-  res.json({ code: 200 });
+  const status = logUser(user.username, user.password);
+  res.json(status);
 });
 
 router.post("/register", (req, res) => {
-  const user: User = {
+  const user: Register = {
     username: req.body.username,
     password: req.body.password,
-    employee: req.body.employee,
+    uType: req.body.type,
+    employee: req.body.is_employee,
   };
-  saveUser(user.username, user.password);
-  res.json({
-    username: user.username,
-    password: user.password,
-    isEmployee: user.employee,
-    code: 200,
-  });
+  const id = saveUser(user.username, user.password, user.uType, user.employee);
+  if (id !== false) {
+    res.json({
+      id,
+      username: user.username,
+      password: user.password,
+      type: user.uType,
+      isEmployee: user.employee,
+      code: 200,
+    });
+    console.log(user);
+  } else
+    res.json({
+      code: 400,
+    });
 });
 
 export { router as auth };

@@ -1,15 +1,37 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link } from "expo-router";
 import { Button } from "expo-router/build/react-navigation";
 import Head from "expo-router/head";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View, TextInput } from "react-native";
-import { getToken, setToken } from "../lib/helper";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Switch,
+} from "react-native";
+import { useAuth } from "../lib/auth";
 
 export default function Auth() {
+  const { refresh } = useAuth();
+
+  // change content state between Login/Register from
   const [sawp, setSwap] = useState(false);
+
+  // holder username/password data in the page
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
 
+  // rest of the form registration values
+
+  //business
+  const [bus, setbus] = useState(false);
+  // employee
+  const [emp, isEmp] = useState(false);
+
+  // Register and Login perform the same thing, send over credentials from the user input to backend
+  // recieve back response, if status 200 save the response data as the credentials in local storage and update state of app
   async function submitLogin() {
     console.log(`user set name as ${user} and password as ${pass}`);
     try {
@@ -22,6 +44,11 @@ export default function Auth() {
       });
       const json = await response.json();
       console.log(`${json.code}`);
+      if (json.code == 200) {
+        await AsyncStorage.setItem("id", String(json.id));
+        await AsyncStorage.setItem("username", json.username);
+        await refresh();
+      }
     } catch (error) {
       console.error(`Encoutered issue: ${error}`);
     }
@@ -30,15 +57,26 @@ export default function Auth() {
   async function submitRegister() {
     console.log(`user set name as ${user} and password as ${pass}`);
     try {
+      const type = bus ? "business" : "individual";
       const response = await fetch("http://localhost:3000/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: user, password: pass }),
+
+        body: JSON.stringify({
+          username: user,
+          password: pass,
+          type: type,
+          is_employee: emp,
+        }),
       });
       const json = await response.json();
-      console.log(`${json.code}`);
+      if (json.code == 200) {
+        await AsyncStorage.setItem("id", String(json.id));
+        await AsyncStorage.setItem("username", json.username);
+        await refresh();
+      }
     } catch (error) {
       console.error(`Encoutered issue: ${error}`);
     }
@@ -86,6 +124,13 @@ export default function Auth() {
             style={styles.input}
             placeholder="secret code"
           ></TextInput>
+          <Text>{bus ? "Enabled" : "Disabled"}</Text>
+          <Switch
+            value={bus}
+            onValueChange={setbus}
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={bus ? "#f5dd4b" : "#f4f3f4"}
+          />
           <Button onPress={submitRegister}>Register</Button>
         </>
       )}
@@ -132,12 +177,12 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
   input: {
-    height: 48, // Comfortable tap target
+    height: 48,
     borderWidth: 1.5,
     borderRadius: 8,
     paddingHorizontal: 16,
     fontSize: 16,
-    color: "#1f2937", // Tailwind gray-800
+    color: "#1f2937",
     backgroundColor: "#ffffff",
   },
 });

@@ -8,17 +8,28 @@ const db = new DatabaseSync("data.db");
 db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE,
-    password TEXT
+    password TEXT,
+    type TEXT,
+    is_employee BOOLEAN
     )`);
 
 // Function to store user credentials when registering
-function saveUser(username: string, password: string) {
+function saveUser(
+  username: string,
+  password: string,
+  type: string,
+  is_employee: boolean = false,
+) {
+  // if (is_employee == null) {
+  //   is_employee = false
+  // }
   try {
-    db.prepare(`INSERT INTO users (username, password) VALUES (?, ?);`).run(
-      username,
-      password,
-    );
-    return true;
+    const result = db
+      .prepare(
+        `INSERT INTO users (username, password, type, is_employee) VALUES (?, ?, ?, ?);`,
+      )
+      .run(username, password, type, Number(is_employee));
+    return result.lastInsertRowid as number;
   } catch (err) {
     console.log(err);
     return false;
@@ -34,14 +45,22 @@ function logUser(username: string, password: string) {
   if (user.length == 0) {
     return { code: "Invalid credentials" };
   }
-  const record = user[0] as { id: number; username: string; password: string };
+  const record = user[0] as {
+    id: number;
+    username: string;
+    password: string;
+    is_employee: number;
+  };
 
   if (record.password !== password) {
     return { code: "Invalid credentials" };
   }
   return {
-    code: "Authenticated",
-    user: { id: record.id, username: record.username },
+    code: 200,
+
+    id: record.id,
+    username: record.username,
+    is_employee: Boolean(record.is_employee),
   };
 }
 

@@ -3,29 +3,39 @@ import Head from "expo-router/head";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Landing from "../components/landing";
+import Dashboard from "../components/dashboard";
+import { useAuth } from "../lib/auth";
 
 export default function Home() {
+  const { auth } = useAuth();
+
   return (
-    <View style={styles.container}>
-      <Head>
-        <title>Template</title>
-      </Head>
-      <Text style={styles.title}>
-        Open up app/index.tsx to start working on your app!
-      </Text>
-      <Link href="/about" style={styles.link}>
-        <Text style={styles.linkText}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit
-          beatae quia, ipsam aliquid, eos commodi libero quaerat animi
-          aspernatur corrupti sit voluptatibus. Pariatur debitis rerum qui nemo
-          ratione eligendi doloremque!
-        </Text>
-      </Link>
-      <Link href="/auth" style={styles.link}>
-        Authenticate here
-      </Link>
-      <StatusBar style="auto" />
-    </View>
+    // <View style={styles.container}>
+    //   <Head>
+    //     <title>Template</title>
+    //   </Head>
+    //   <Text style={styles.title}>
+    //     Open up app/index.tsx to start working on your app!
+    //   </Text>
+    //   <Link href="/about" style={styles.link}>
+    //     <Text style={styles.linkText}>
+    //       Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit
+    //       beatae quia, ipsam aliquid, eos commodi libero quaerat animi
+    //       aspernatur corrupti sit voluptatibus. Pariatur debitis rerum qui nemo
+    //       ratione eligendi doloremque!
+    //     </Text>
+    //   </Link>
+    //   <Link href="/auth" style={styles.link}>
+    //     Authenticate here
+    //   </Link>
+    //   {/* <StatusBar style="auto" /> */}
+    // </View>
+    <>
+      <View style={styles.container}>
+        {auth.loggedIn ? <Dashboard /> : <Landing />}
+      </View>
+    </>
   );
 }
 
