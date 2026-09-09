@@ -132,7 +132,7 @@ export default function Auth() {
             thumbColor="#ffffff"
             ios_backgroundColor="#d1d5db"
           />
-          <Text>Are you Employee: {bus ? "Yes" : "No"}</Text>
+          <Text>Are you Employee: {emp ? "Yes" : "No"}</Text>
           <Switch
             value={emp}
             onValueChange={isEmp}
