@@ -43,13 +43,11 @@ export default function Auth() {
         <TabsContent value="login">
           <LoginForm
             onAuthenticated={() => navigate("/dashboard", { replace: true })}
-            onRegisterClick={() => setActiveTab("register")}
           />
         </TabsContent>
         <TabsContent value="register">
           <RegisterForm
             onAuthenticated={() => navigate("/dashboard", { replace: true })}
-            onLoginClick={() => setActiveTab("login")}
           />
         </TabsContent>
       </Tabs>

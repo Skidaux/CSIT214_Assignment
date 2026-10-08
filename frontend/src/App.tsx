@@ -5,6 +5,9 @@ import About from "@/src/pages/About";
 import Auth from "@/src/pages/Auth";
 import Dashboard from "@/src/pages/Dashboard";
 import Home from "@/src/pages/Home";
+import ResourceDetails from "@/src/pages/ResourceDetails";
+import Resources from "@/src/pages/Resources";
+import Staff from "@/src/pages/Staff";
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="auth" element={<Auth />} />
           <Route path="dashboard" element={<Dashboard />} />
+          <Route path="resources" element={<Resources />} />
+          <Route path="resources/:name" element={<ResourceDetails />} />
+          <Route path="staff" element={<Staff />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </AppLayout>

@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
@@ -20,13 +19,11 @@ import { useAuth } from "@/src/hooks/use-auth";
 
 type LoginFormProps = React.ComponentProps<"div"> & {
   onAuthenticated: () => void;
-  onRegisterClick: () => void;
 };
 
 export function LoginForm({
   className,
   onAuthenticated,
-  onRegisterClick,
   ...props
 }: LoginFormProps) {
   const { login } = useAuth();
@@ -55,9 +52,9 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
+          <CardTitle>Welcome to CoastLink</CardTitle>
           <CardDescription>
-            Enter your council booking username and password.
+            Enter your CoastLink Council username and password.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -93,16 +90,6 @@ export function LoginForm({
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Logging in…" : "Login"}
                 </Button>
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <button
-                    type="button"
-                    className="font-medium text-foreground underline-offset-4 hover:underline"
-                    onClick={onRegisterClick}
-                  >
-                    Register
-                  </button>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>

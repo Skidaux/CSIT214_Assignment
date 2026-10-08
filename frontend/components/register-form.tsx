@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
@@ -21,19 +20,16 @@ import type { RegisterDetails } from "@/src/lib/auth";
 
 type RegisterFormProps = React.ComponentProps<"div"> & {
   onAuthenticated: () => void;
-  onLoginClick: () => void;
 };
 
 export function RegisterForm({
   className,
   onAuthenticated,
-  onLoginClick,
   ...props
 }: RegisterFormProps) {
   const { register } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [accountType, setAccountType] =
     useState<RegisterDetails["accountType"]>("individual");
   const [isEmployee, setIsEmployee] = useState(false);
@@ -43,11 +39,6 @@ export function RegisterForm({
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
 
     setIsSubmitting(true);
     const result = await register({
@@ -70,9 +61,9 @@ export function RegisterForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle>Create an account</CardTitle>
+          <CardTitle>Join CoastLink online</CardTitle>
           <CardDescription>
-            Register to book council rooms, facilities, and equipment.
+            Register to book CoastLink Council rooms, facilities and equipment.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -115,19 +106,6 @@ export function RegisterForm({
                   required
                 />
               </Field>
-              <Field>
-                <FieldLabel htmlFor="confirm-password">
-                  Confirm password
-                </FieldLabel>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  autoComplete="new-password"
-                  value={confirmPassword}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
-                  required
-                />
-              </Field>
               <label className="flex items-start gap-3 text-sm">
                 <input
                   type="checkbox"
@@ -136,9 +114,9 @@ export function RegisterForm({
                   className="mt-0.5 size-4 accent-primary"
                 />
                 <span>
-                  I am a council employee
+                  I am a CoastLink Council employee
                   <span className="block text-muted-foreground">
-                    Employee access can be verified by the council later.
+                    Employee access enables Council operations tools.
                   </span>
                 </span>
               </label>
@@ -151,16 +129,6 @@ export function RegisterForm({
                 <Button type="submit" disabled={isSubmitting}>
                   {isSubmitting ? "Creating account…" : "Create account"}
                 </Button>
-                <FieldDescription className="text-center">
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    className="font-medium text-foreground underline-offset-4 hover:underline"
-                    onClick={onLoginClick}
-                  >
-                    Login
-                  </button>
-                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>

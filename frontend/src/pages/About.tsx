@@ -1,24 +1,26 @@
 export default function About() {
   return (
-    <section className="mx-auto w-full max-w-5xl space-y-6">
+    <section className="mx-auto w-full max-w-5xl space-y-5">
       <div className="space-y-3">
-        <p className="text-sm font-medium text-primary">About the project</p>
-        <h1 className="font-heading text-4xl font-semibold tracking-tight">
-          About
+        <p className="text-sm font-medium text-primary">About CoastLink Council</p>
+        <h1 className="font-heading text-3xl font-semibold tracking-tight">
+          Connected services for a growing coastal region
         </h1>
         <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-          This app provides a simple, responsive dashboard experience with
-          persistent navigation. The sidebar stays in place while each route
-          renders in the main content area.
+          CoastLink Council supports residents, businesses and visitors through
+          accessible community facilities, environmental services and local
+          assistance. This portal brings facility bookings and maintenance
+          reporting into one convenient place.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
+      <div className="rounded-lg border border-border bg-card p-5">
         <h2 className="font-heading text-xl font-semibold">
-          Built for easy navigation
+          Community facilities, made simpler
         </h2>
         <p className="mt-2 text-muted-foreground">
-          Choose About from the sidebar or visit <code>/about</code> directly.
+          Search Council rooms, venues and equipment, check availability, submit
+          booking requests and keep track of every request from your dashboard.
         </p>
       </div>
     </section>

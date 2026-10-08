@@ -9,7 +9,7 @@ import {
   type RegisterDetails,
 } from "@/src/lib/auth";
 
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 type AuthProviderProps = {
   children: ReactNode;

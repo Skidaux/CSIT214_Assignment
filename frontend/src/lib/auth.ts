@@ -25,7 +25,7 @@ export type AuthContextValue = {
   logout: () => void;
 };
 
-export const AUTH_STORAGE_KEY = "council-bookings-user";
+export const AUTH_STORAGE_KEY = "coastlink-council-user";
 
 export function getStoredUser(): AuthUser | null {
   try {

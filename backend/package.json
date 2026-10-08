@@ -7,8 +7,11 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/index.js",
-    "setup": "tsc && node dist/db.js"
+    "dev": "tsc && node dist/index.js",
+    "build": "npm --prefix ../frontend run build && tsc",
+    "start": "npm run build && node dist/index.js",
+    "setup": "tsc && node dist/db.js",
+    "fab": "tsc && node dist/fabricate.js"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

@@ -13,6 +13,8 @@ const pageTitles: Record<string, string> = {
   "/about": "About",
   "/auth": "Login or register",
   "/dashboard": "Dashboard",
+  "/resources": "Resources",
+  "/staff": "Staff workspace",
 };
 
 type AppLayoutProps = {
@@ -21,7 +23,9 @@ type AppLayoutProps = {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const { pathname } = useLocation();
-  const title = pageTitles[pathname] ?? "Page";
+  const title =
+    pageTitles[pathname] ??
+    (pathname.startsWith("/resources/") ? "Resource details" : "Page");
 
   return (
     <SidebarProvider>
@@ -34,7 +38,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <span className="font-medium text-foreground">{title}</span>
           </div>
         </header>
-        <main className="flex flex-1 flex-col px-4 py-8 md:px-8">
+        <main className="flex flex-1 flex-col px-4 py-6 md:px-8">
           {children}
         </main>
       </SidebarInset>

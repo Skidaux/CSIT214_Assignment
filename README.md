@@ -2,15 +2,18 @@
 
 ## Instruction guide to run the application
 
-## Backend Setup 
+## Backend Setup
+
+**Required software**: Node.js v22.5+
+
+Install dependencies using `npm install` in both the `backend` and `frontend` folders. From `backend`, run `npm run setup` to initialise the database and `npm run fab` to add the fictional demonstration data.
+
+Run `npm start` in `backend` to build the Vite frontend, compile the backend and serve the complete application through Express at `http://localhost:3000`.
+
+---
+
+## Frontend Setup
 
 **Required software**: NODEJS v20+
 
-Install required dependencies and libraries using `npm i` inside the `backend` folder, and use `npm start` to run the backend service. The backend by default uses port 3000.
-
----
-## Frontend Setup 
-
-**Required software**: Node.js v20+
-
-Install the dependencies using `npm install` inside the `frontend` folder, then use `npm run dev` to start the Vite development server. Run the backend service as well for authentication and other API functionality.
+For frontend development, run `npm run dev` in `frontend` while the backend is running on port 3000. Vite proxies API requests to Express automatically.

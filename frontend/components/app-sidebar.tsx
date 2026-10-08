@@ -1,10 +1,12 @@
 import {
+  Buildings,
   Gauge,
   House,
   Info,
   SignIn,
   SignOut,
-  SquaresFour,
+  Waves,
+  Wrench,
 } from "@phosphor-icons/react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 
@@ -25,18 +27,22 @@ import {
 
 const publicNavigation = [
   { label: "Home", path: "/", icon: House },
+  { label: "Resources", path: "/resources", icon: Buildings },
   { label: "About", path: "/about", icon: Info },
 ];
 
 export function AppSidebar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
 
   const navigation = isLoggedIn
     ? [
         ...publicNavigation,
         { label: "Dashboard", path: "/dashboard", icon: Gauge },
+        ...(user?.isEmployee
+          ? [{ label: "Staff workspace", path: "/staff", icon: Wrench }]
+          : []),
       ]
     : [
         ...publicNavigation,
@@ -55,16 +61,21 @@ export function AppSidebar() {
           to="/"
           className="flex items-center gap-2 font-heading text-lg font-semibold"
         >
-          <span className="flex size-8 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <SquaresFour weight="bold" />
+          <span className="flex size-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
+            <Waves weight="bold" />
           </span>
-          <span>Council Bookings</span>
+          <span className="leading-tight">
+            <span className="block">CoastLink</span>
+            <span className="block text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Council
+            </span>
+          </span>
         </NavLink>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Community services</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map(({ label, path, icon: Icon }) => (
@@ -100,7 +111,9 @@ export function AppSidebar() {
           <span className="text-sm text-muted-foreground">Theme</span>
           <ModeToggle />
         </div>
-        <span className="text-xs text-muted-foreground">CSIT214 Assignment</span>
+        <span className="text-xs text-muted-foreground">
+          Connecting our coastal community
+        </span>
       </SidebarFooter>
     </Sidebar>
   );

@@ -15,4 +15,16 @@ export default defineConfig({
       "@": rootDir,
     },
   },
+  build: {
+    outDir: "../backend/dir",
+    emptyOutDir: true,
+  },
+  server: {
+    proxy: {
+      "/api": "http://localhost:3000",
+      "/auth": "http://localhost:3000",
+      "/booking": "http://localhost:3000",
+      "/maintenance": "http://localhost:3000",
+    },
+  },
 });
