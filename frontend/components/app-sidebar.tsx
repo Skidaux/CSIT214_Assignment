@@ -111,9 +111,7 @@ export function AppSidebar() {
           <span className="text-sm text-muted-foreground">Theme</span>
           <ModeToggle />
         </div>
-        <span className="text-xs text-muted-foreground">
-          Connecting our coastal community
-        </span>
+        <span className="text-xs text-muted-foreground">CSIT214 Assignment</span>
       </SidebarFooter>
     </Sidebar>
   );

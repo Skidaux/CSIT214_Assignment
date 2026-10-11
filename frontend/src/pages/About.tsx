@@ -2,27 +2,23 @@ export default function About() {
   return (
     <section className="mx-auto w-full max-w-5xl space-y-5">
       <div className="space-y-3">
-        <p className="text-sm font-medium text-primary">About CoastLink Council</p>
+        <p className="text-sm font-medium text-primary">About CoastLink Council - CSIT214</p>
         <h1 className="font-heading text-3xl font-semibold tracking-tight">
-          Connected services for a growing coastal region
+        CoastalLink Council Prototype assignment
         </h1>
         <p className="max-w-2xl text-lg leading-8 text-muted-foreground">
-          CoastLink Council supports residents, businesses and visitors through
-          accessible community facilities, environmental services and local
-          assistance. This portal brings facility bookings and maintenance
-          reporting into one convenient place.
+          CoastLink Council is a prototype service created for our assignment in CSIT214
+  
         </p>
+        <ul className="">
+          <li><span className="font-bold">Hayat</span> - Project Manager</li>
+          <li><span className="font-bold">Joshua</span> - Business Analyst</li>
+          <li><span className="font-bold">Zane</span> - Project & Documentation Coordinator</li>
+          <li><span className="font-bold">Ammar</span> - UX/UI Desginer & Programmer</li>
+          <li><span className="font-bold">Frank</span> - Quality Assurance</li>
+        </ul>
       </div>
 
-      <div className="rounded-lg border border-border bg-card p-5">
-        <h2 className="font-heading text-xl font-semibold">
-          Community facilities, made simpler
-        </h2>
-        <p className="mt-2 text-muted-foreground">
-          Search Council rooms, venues and equipment, check availability, submit
-          booking requests and keep track of every request from your dashboard.
-        </p>
-      </div>
     </section>
   );
 }

@@ -1,4 +1,4 @@
-// Fictional CoastLink Council data for prototype demonstrations.
+// Simple sample data for the prototype.
 
 import "./db.js";
 import { DatabaseSync } from "node:sqlite";
@@ -23,6 +23,14 @@ try {
   addUser.run("council_staff", "staff123", "individual", 1);
   addUser.run("maintenance_team", "staff123", "business", 1);
 
+  // Start with a predictable set of sample resources and activity.
+  db.exec(`
+    DELETE FROM audit_history;
+    DELETE FROM maintenance;
+    DELETE FROM brecord;
+    DELETE FROM booking;
+  `);
+
   const addResource = db.prepare(`
     INSERT INTO booking (name, location, size, type, description, status)
     VALUES (?, ?, ?, ?, ?, ?)
@@ -36,50 +44,82 @@ try {
 
   addResource.run(
     "CoastLink Community Hall",
-    "14 Harbour Esplanade, Seaview",
+    "Moore Street, Liverpool NSW 2170",
     120,
     "facility",
-    "A flexible community venue with a stage, kitchen and accessible entrance.",
+    "Large hall with a kitchen and stage.",
     "available",
   );
   addResource.run(
-    "Harbour View Meeting Room",
-    "CoastLink Civic Centre, Level 1",
+    "Casula Art Studio",
+    "Powerhouse Road, Casula NSW 2170",
+    24,
+    "room",
+    "Art studio with sinks and work benches.",
+    "available",
+  );
+  addResource.run(
+    "Miller Music Studio",
+    "Woodward Crescent, Miller NSW 2168",
+    12,
+    "room",
+    "Small studio for music practice.",
+    "available",
+  );
+  addResource.run(
+    "Green Valley Dance Studio",
+    "Wilson Road, Green Valley NSW 2168",
+    35,
+    "room",
+    "Open studio with mirrors and speakers.",
+    "available",
+  );
+  addResource.run(
+    "Moorebank Workshop",
+    "Newbridge Road, Moorebank NSW 2170",
+    20,
+    "room",
+    "Workshop room with benches and basic tools.",
+    "available",
+  );
+  addResource.run(
+    "Prestons Craft Workshop",
+    "Kurrajong Road, Prestons NSW 2170",
     18,
     "room",
-    "A quiet meeting room with video conferencing and presentation facilities.",
-    "available",
-  );
-  addResource.run(
-    "Seabreeze Sports Pavilion",
-    "8 Ocean Park Drive, Seabreeze",
-    80,
-    "facility",
-    "Clubroom and covered pavilion beside the Council sports fields.",
-    "available",
-  );
-  addResource.run(
-    "Coastal Arts Studio",
-    "27 Lighthouse Road, Bay Point",
-    30,
-    "room",
-    "A light-filled studio with sinks, work benches and secure storage.",
+    "Simple workshop space for craft activities.",
     "maintenance",
   );
   addResource.run(
-    "Mobile PA System",
-    "Council Equipment Store",
-    6,
-    "equipment",
-    "Portable speaker, microphone and stand set for community events.",
+    "Liverpool Meeting Room",
+    "George Street, Liverpool NSW 2170",
+    16,
+    "room",
+    "Meeting room with a screen and whiteboard.",
     "available",
   );
   addResource.run(
     "Folding Chairs",
-    "Council Equipment Store",
+    "Council Store, Liverpool NSW 2170",
     100,
     "equipment",
-    "Lightweight folding chairs available individually for local events.",
+    "Folding chairs for meetings and events.",
+    "available",
+  );
+  addResource.run(
+    "Foldable Tables",
+    "Council Store, Liverpool NSW 2170",
+    30,
+    "equipment",
+    "Foldable tables for meetings and events.",
+    "available",
+  );
+  addResource.run(
+    "PA System",
+    "Council Store, Liverpool NSW 2170",
+    6,
+    "equipment",
+    "Portable speaker and microphone set.",
     "available",
   );
 
@@ -91,20 +131,6 @@ try {
   const staffId = Number((getUserId.get("council_staff") as { id: number }).id);
   const maintenanceId = Number(
     (getUserId.get("maintenance_team") as { id: number }).id,
-  );
-
-  // Remove only records belonging to the fictional demo accounts before reseeding.
-  db.prepare(
-    `DELETE FROM audit_history WHERE user_id IN (?, ?, ?, ?)`,
-  ).run(residentId, clubId, staffId, maintenanceId);
-  db.prepare(
-    `DELETE FROM maintenance WHERE reported_by IN (?, ?, ?, ?)`,
-  ).run(residentId, clubId, staffId, maintenanceId);
-  db.prepare(`DELETE FROM brecord WHERE user_id IN (?, ?, ?, ?)`).run(
-    residentId,
-    clubId,
-    staffId,
-    maintenanceId,
   );
 
   const addBooking = db.prepare(`
@@ -120,7 +146,7 @@ try {
     "2026-10-17T12:00:00+11:00",
     residentId,
     "CoastLink Community Hall",
-    "Neighbourhood preparedness workshop",
+    "Birthday party",
     45,
     1,
     "approved",
@@ -131,9 +157,9 @@ try {
     "2026-10-24T13:00:00+11:00",
     "2026-10-24T17:00:00+11:00",
     clubId,
-    "Seabreeze Sports Pavilion",
-    "CoastCare volunteer appreciation afternoon",
-    65,
+    "Moorebank Workshop",
+    "Woodwork class",
+    16,
     1,
     "pending",
     null,
@@ -143,8 +169,8 @@ try {
     "2026-10-29T18:00:00+11:00",
     "2026-10-29T20:00:00+11:00",
     residentId,
-    "Harbour View Meeting Room",
-    "Residents association meeting",
+    "Casula Art Studio",
+    "Painting class",
     14,
     1,
     "pending",
@@ -155,10 +181,10 @@ try {
     "2026-10-17T08:00:00+11:00",
     "2026-10-17T13:00:00+11:00",
     residentId,
-    "Mobile PA System",
-    "Audio equipment for the preparedness workshop",
+    "Foldable Tables",
+    "Tables for the hall booking",
     1,
-    2,
+    8,
     "approved",
     staffId,
   );
@@ -167,9 +193,9 @@ try {
     "2026-10-12T10:00:00+11:00",
     "2026-10-12T11:00:00+11:00",
     clubId,
-    "Harbour View Meeting Room",
-    "Planning meeting",
-    8,
+    "Miller Music Studio",
+    "Band practice",
+    6,
     1,
     "cancelled",
     null,
@@ -183,10 +209,10 @@ try {
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
     .run(
-      "Coastal Arts Studio",
+      "Prestons Craft Workshop",
       residentId,
       maintenanceId,
-      "The rear sink is leaking and the floor requires inspection.",
+      "One work bench is loose.",
       "high",
       "in_progress",
       "2026-10-07T15:40:00+11:00",
@@ -200,7 +226,7 @@ try {
     .run(
       "CoastLink Community Hall",
       clubId,
-      "One ceiling light near the kitchen is flickering.",
+      "A light near the kitchen is flickering.",
       "low",
       "reported",
       "2026-10-08T11:10:00+11:00",
@@ -232,7 +258,7 @@ try {
     "requested",
     "booking",
     String(pendingPavilion.lastInsertRowid),
-    "Seabreeze Sports Pavilion",
+    "Moorebank Workshop",
     "2026-10-08T10:30:00+11:00",
   );
   addAudit.run(
@@ -240,7 +266,7 @@ try {
     "reported",
     "maintenance",
     String(artsMaintenance.lastInsertRowid),
-    "Coastal Arts Studio",
+    "Prestons Craft Workshop",
     "2026-10-07T15:40:00+11:00",
   );
   addAudit.run(
@@ -253,7 +279,7 @@ try {
   );
 
   db.exec("COMMIT;");
-  console.log("CoastLink mock data created successfully.");
+  console.log("Sample data created.");
   console.log("Resident: coastal_resident / demo123");
   console.log("Business: coastcare_club / demo123");
   console.log("Staff: council_staff / staff123");
