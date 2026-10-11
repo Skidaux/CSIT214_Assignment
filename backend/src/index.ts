@@ -8,7 +8,7 @@ import { booking } from "./booking.js";
 import { maintenance } from "./maintenance.js";
 
 const app = express();
-const PORT = Number(process.env.PORT ?? 3000);
+const PORT = Number(process.env.PORT ?? 7070);
 const frontendDirectory = fileURLToPath(new URL("../dir", import.meta.url));
 
 app.use(cors());
