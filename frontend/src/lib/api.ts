@@ -39,6 +39,26 @@ export type MaintenanceRecord = {
   reported_date: string;
 };
 
+export type UtilisationRecord = {
+  name: string;
+  type: string;
+  location: string;
+  approved_bookings: number;
+  booked_hours: number;
+  items_reserved: number;
+};
+
+export type AuditRecord = {
+  id: number;
+  user_id: number | null;
+  username: string | null;
+  action: string;
+  record_type: string;
+  record_id: string;
+  details: string | null;
+  action_date: string;
+};
+
 type ApiError = { message?: string };
 
 export async function apiRequest<T>(path: string, options?: RequestInit) {

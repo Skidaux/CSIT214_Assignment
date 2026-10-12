@@ -1,4 +1,10 @@
-import { Buildings, ClipboardText, Plus, Wrench } from "@phosphor-icons/react";
+import {
+  Buildings,
+  ChartBar,
+  ClipboardText,
+  Plus,
+  Wrench,
+} from "@phosphor-icons/react";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Navigate } from "react-router-dom";
 
@@ -18,10 +24,12 @@ import { useAuth } from "@/src/hooks/use-auth";
 import {
   apiRequest,
   formatDateTime,
+  type AuditRecord,
   type BookingRecord,
   type BookingResource,
   type MaintenanceRecord,
   type ResourceStatus,
+  type UtilisationRecord,
 } from "@/src/lib/api";
 
 export default function Staff() {
@@ -29,6 +37,8 @@ export default function Staff() {
   const [requests, setRequests] = useState<BookingRecord[]>([]);
   const [resources, setResources] = useState<BookingResource[]>([]);
   const [maintenance, setMaintenance] = useState<MaintenanceRecord[]>([]);
+  const [utilisation, setUtilisation] = useState<UtilisationRecord[]>([]);
+  const [auditHistory, setAuditHistory] = useState<AuditRecord[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -39,14 +49,26 @@ export default function Staff() {
   const loadStaffData = useCallback(async () => {
     if (!user?.isEmployee) return;
     try {
-      const [bookingData, resourceData, maintenanceData] = await Promise.all([
+      const [
+        bookingData,
+        resourceData,
+        maintenanceData,
+        utilisationData,
+        auditData,
+      ] = await Promise.all([
         apiRequest<BookingRecord[]>(`/booking/requests?employeeId=${user.id}`),
         apiRequest<BookingResource[]>("/booking/resources"),
         apiRequest<MaintenanceRecord[]>(`/maintenance?employeeId=${user.id}`),
+        apiRequest<UtilisationRecord[]>(
+          `/booking/reports/utilisation?employeeId=${user.id}`,
+        ),
+        apiRequest<AuditRecord[]>(`/booking/audit?employeeId=${user.id}`),
       ]);
       setRequests(bookingData);
       setResources(resourceData);
       setMaintenance(maintenanceData);
+      setUtilisation(utilisationData);
+      setAuditHistory(auditData);
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to load staff data");
     }
@@ -59,13 +81,27 @@ export default function Staff() {
       apiRequest<BookingRecord[]>(`/booking/requests?employeeId=${user.id}`),
       apiRequest<BookingResource[]>("/booking/resources"),
       apiRequest<MaintenanceRecord[]>(`/maintenance?employeeId=${user.id}`),
+      apiRequest<UtilisationRecord[]>(
+        `/booking/reports/utilisation?employeeId=${user.id}`,
+      ),
+      apiRequest<AuditRecord[]>(`/booking/audit?employeeId=${user.id}`),
     ])
-      .then(([bookingData, resourceData, maintenanceData]) => {
+      .then(
+        ([
+          bookingData,
+          resourceData,
+          maintenanceData,
+          utilisationData,
+          auditData,
+        ]) => {
         if (!active) return;
         setRequests(bookingData);
         setResources(resourceData);
         setMaintenance(maintenanceData);
-      })
+          setUtilisation(utilisationData);
+          setAuditHistory(auditData);
+        },
+      )
       .catch((error: unknown) => {
         if (active) {
           setMessage(error instanceof Error ? error.message : "Unable to load staff data");
@@ -183,7 +219,7 @@ export default function Staff() {
       ) : null}
 
       <Tabs defaultValue="bookings" className="gap-6">
-        <TabsList className="grid h-auto w-full grid-cols-3">
+        <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="bookings" className="py-3">
             <ClipboardText /> Bookings
           </TabsTrigger>
@@ -192,6 +228,9 @@ export default function Staff() {
           </TabsTrigger>
           <TabsTrigger value="maintenance" className="py-3">
             <Wrench /> Maintenance
+          </TabsTrigger>
+          <TabsTrigger value="reports" className="py-3">
+            <ChartBar /> Reports
           </TabsTrigger>
         </TabsList>
 
@@ -382,6 +421,133 @@ export default function Staff() {
               </Card>
             ))
           )}
+        </TabsContent>
+
+        <TabsContent value="reports" className="space-y-6">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-sm text-muted-foreground">Approved bookings</p>
+              <p className="mt-1 font-heading text-2xl font-semibold">
+                {utilisation.reduce(
+                  (total, item) => total + Number(item.approved_bookings),
+                  0,
+                )}
+              </p>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-sm text-muted-foreground">Booked hours</p>
+              <p className="mt-1 font-heading text-2xl font-semibold">
+                {utilisation
+                  .reduce(
+                    (total, item) => total + Number(item.booked_hours),
+                    0,
+                  )
+                  .toFixed(1)}
+              </p>
+            </div>
+            <div className="rounded-lg border bg-card p-4">
+              <p className="text-sm text-muted-foreground">Resources used</p>
+              <p className="mt-1 font-heading text-2xl font-semibold">
+                {
+                  utilisation.filter(
+                    (item) => Number(item.approved_bookings) > 0,
+                  ).length
+                }
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <h2 className="font-heading text-lg font-semibold">
+                Utilisation report
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Approved use of Council facilities and equipment.
+              </p>
+            </div>
+            <div className="overflow-x-auto rounded-lg border">
+              <table className="w-full min-w-[680px] text-left text-sm">
+                <thead className="border-b bg-muted/60 text-muted-foreground">
+                  <tr>
+                    <th className="px-4 py-3 font-medium">Resource</th>
+                    <th className="px-4 py-3 font-medium">Type</th>
+                    <th className="px-4 py-3 text-right font-medium">
+                      Bookings
+                    </th>
+                    <th className="px-4 py-3 text-right font-medium">Hours</th>
+                    <th className="px-4 py-3 text-right font-medium">
+                      Items reserved
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {utilisation.map((item) => (
+                    <tr key={item.name}>
+                      <td className="px-4 py-3">
+                        <p className="font-medium">{item.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {item.location}
+                        </p>
+                      </td>
+                      <td className="px-4 py-3 capitalize">{item.type}</td>
+                      <td className="px-4 py-3 text-right">
+                        {item.approved_bookings}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {Number(item.booked_hours).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        {item.type === "equipment" ? item.items_reserved : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <h2 className="font-heading text-lg font-semibold">
+                Audit history
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Recent booking, resource and maintenance activity.
+              </p>
+            </div>
+            <div className="divide-y divide-border rounded-lg border bg-card">
+              {auditHistory.length === 0 ? (
+                <p className="p-6 text-sm text-muted-foreground">
+                  No audit activity recorded.
+                </p>
+              ) : (
+                auditHistory.map((entry) => (
+                  <div
+                    key={entry.id}
+                    className="flex flex-col justify-between gap-2 px-4 py-3 sm:flex-row sm:items-center"
+                  >
+                    <div>
+                      <p className="text-sm">
+                        <span className="font-medium">
+                          {entry.username ?? "System"}
+                        </span>{" "}
+                        <span className="text-muted-foreground">
+                          {entry.action.replace("_", " ")} {entry.record_type}
+                        </span>
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {entry.details || `${entry.record_type} #${entry.record_id}`}
+                      </p>
+                    </div>
+                    <time className="whitespace-nowrap text-xs text-muted-foreground">
+                      {formatDateTime(entry.action_date)}
+                    </time>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </TabsContent>
       </Tabs>
     </section>
