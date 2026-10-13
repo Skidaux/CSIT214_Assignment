@@ -40,10 +40,9 @@
 - (example `cd C:\Users\USER\Downloads\CSIT214_Assignment-main\frontend`)
 - `npm run dev` (Vite proxies API requests to the backend automatically)
 
-**For local testing on seperate devices**
-
 ---
 
+**For local testing on seperate devices**
 - Host device connected to the same `local network` as devices
 - Host device running `backend`
 - Retrieve host device `IPV4 address`
