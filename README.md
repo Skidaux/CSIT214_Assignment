@@ -40,6 +40,13 @@
 - (example `cd C:\Users\USER\Downloads\CSIT214_Assignment-main\frontend`)
 - `npm run dev` (Vite proxies API requests to the backend automatically)
 
+
+---
+
+**For local testing on host device**
+- Host device running `backend`
+- Paste `http://localhost:7070` into browser
+
 ---
 
 **For local testing on seperate devices**
